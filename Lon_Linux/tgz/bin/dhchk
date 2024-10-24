@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# $Header: /home/garyb/FlashStick/CVSROOT/DigitalHome/Linux/Installer/dhchk,v 1.1 2005/07/07 00:40:34 garyb Exp $
+#
+# Checks installation of DigitalHome.
+
+for pkg in {DigitalHome,{libftdi,libusb}{,-devel},hotplug}; do
+    echo Checking $pkg...
+    rpm -Vv $pkg
+    echo
+done
+
+# vim: syntax=sh

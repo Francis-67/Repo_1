@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>ReadMe</title>
+
+<style type="text/css">
+<!--
+.style1 {font-family: Arial, Helvetica, sans-serif}
+.style2 {
+	font-family: arial;
+	font-size: 21px;
+}
+.style3 {
+	font-family: "times new roman";
+	font-size: 16px;
+}
+-->
+</style>
+</head>
+
+<body>
+<p align="center" class="style1" style="margin-bottom:0;"><strong>Echelon U10/U20 Network Interface Driver for Linux ReadMe<br>
+Release 1.0, February 6, 2006</strong></p>
+<blockquote class="style1" style="margin-top: 0; margin-bottom: 0;"><blockquote style="margin-top: 0; margin-bottom: 0;">&nbsp;</blockquote>
+</blockquote>
+<p align="center" class="style1" style="margin-top: 0; margin-bottom: 0;"><strong>Copyright &copy; 2006 Echelon Corporation<br>
+All Rights Reserved</strong></p>
+<blockquote class="style1" style="margin-top: 0; margin-bottom: 0;"><blockquote style="margin-top: 0; margin-bottom: 0;">&nbsp;</blockquote>
+</blockquote>
+<p style="margin-top: 0;"><span style="font-family:arial;font-size:21px;"><strong>1&nbsp; Overview</strong></span></p>
+<blockquote>
+  <p><span style="font-family:times new roman;font-size:16px;">This network interface driver provides the required support for the Echelon U10/U20 USB Network Interfaces on the Linux operating system.&nbsp; Applications that use the de facto standard OpenLDV functions (ldv_open, ldv_read, ldv_write, ldv_close) can be used with the network interface driver.&nbsp; For more information on how to program to the OpenLDV functions, download the OpenLDV Developer's Kit from <a href="http://www.echelon.com/downloads">http://www.echelon.com/downloads</a>.</span></p>
+</blockquote>
+<blockquote>
+  <p>This network interface driver is <span style="font-family:times new roman;font-size:16px;">licensed for royalty-free use exclusively with Echelon's<span style="font-family:times new roman;font-size:16px;"> U10/U20 USB Network Interfaces.</span></span></p>
+  <p><span style="font-family:times new roman;font-size:16px;">This file contains important information about this network interface driver.&nbsp; Additional information and updates, including critical updates, may be available in Echelon&rsquo;s Downloads Web page at <a href="http://www.echelon.com/downloads">http://www.echelon.com/downloads</a>.</span></p>
+</blockquote>
+<h1><strong><span class="style2">2</span></strong><span style="font-family:arial;font-size:21px;"><strong>&nbsp; System Requirements</strong></span></h1>
+<ul>
+  <li> x86 PC </li>
+  <li>Redhat Linux 9 (Fedora Core 3 or Fedora Core 4) 
+        and the 
+        libftdi, libusb and hotplug libraries (other x86 Linux distributions probably work as well--although we have not tested them) </li>
+  <li><span style="font-family:times new roman;font-size:16px;">Available USB 1.1 or 2.0 port</span>
+  </li>
+  <li>Echelon U10 or U20 USB Network Interface 
+  </li>
+</ul>
+<h1><span style="font-family:arial;font-size:21px;"><strong>3&nbsp; Installation</strong></span></h1>
+<ol>
+  <li><span style="margin-top: 0; margin-bottom: 0;">Download and uncompress the archive Ux0Linux100.zip.</span></li>
+  <li>
+    <p style="margin-top: 0; margin-bottom: 0;">Double-click the file DigitalHome-0.1-8.i386.rpm.&nbsp; The U10/U20 network interface driver will install.&nbsp; If it is the case that your kernel does not include libftdi, you will get an error message instead.&nbsp; If that is the case, install libftdi-0.6-1.i386.rpm and then try installing DigitalHome-0.1-8.i386.rpm again.&nbsp; If libftdi will not install, it is normally because libusb is also not included in your kernel.&nbsp; If that is the case, install libusb-0.1.10a-1.i386.rpm, then libftdi-0.6-1.i386.rpm, then DigitalHome-0.1-8.i386.rpm.</p>
+  </li>
+  <li>If you will be developing OpenLDV applications on this box, double-click DigitalHome-devel-0.1-8.i386.rpm.&nbsp; This RPM includes the headers needed to develop OpenLDV applications. </li>
+  <li>The installation can be checked at any time using the dhchk script that is installed by the RPM you installed in step 2. </li>
+  <li> <span class="style3" style="margin-top: 0; margin-bottom: 0;">Insert the U10/U20 USB Network Interface into an available USB port.</span></li>
+  <li>The first time that you use this software, you will want to continue with the following steps to verify that the software and hardware are working correctly.&nbsp; Verify after inserting the U10/U20 that the USB hot-plug support is working by looking at /var/log/messages.&nbsp; You should see messages similar to the following:<br>
+    <br>
+  Jul 6 15:34:02 localhost kernel: usb 1-2.4: new full speed USB device using uhci_hcd and address 29<br>
+  Jul 6 15:34:02 localhost default.hotplug[2254]: arguments (usb) env (SUBSYSTEM=usb OLDPWD=/ DEVPATH=/devices/pci0000:00/0000:00:07.2/usb1/1-2/1-2.4/1-2.4:1.0 PATH=/bin:/sbin:/usr/sbin:/usr/bin ACTION=add PWD=/etc/hotplug HOME=/ SHLVL=2 DEVICE=/proc/bus/usb/001/029 INTERFACE=255/255/255 PRODUCT=920/7500/400 TYPE=0/0/0 DEBUG=yes PHYSDEVBUS=usb SEQNUM=743 _=/bin/env)<br>
+  Jul 6 15:34:02 localhost default.hotplug[2254]: invoke /etc/hotplug/usb.agent ()<br>
+  Jul 6 15:34:02 localhost default.hotplug[2276]: arguments (usb) env (SUBSYSTEM=usb OLDPWD=/ DEVPATH=/devices/pci0000:00/0000:00:07.2/usb1/1-2/1-2.4 PATH=/bin:/sbin:/usr/sbin:/usr/bin ACTION=add PWD=/etc/hotplug HOME=/ SHLVL=2 PHYSDEVDRIVER=usb DEBUG=yes PHYSDEVBUS=usb SEQNUM=742 _=/bin/env)<br>
+  Jul 6 15:34:02 localhost default.hotplug[2276]: invoke /etc/hotplug/usb.agent ()<br>
+  Jul 6 15:34:06 localhost usb.agent[2254]: Setup 0x00 0x00 for USB product 920/7500/400<br>
+  Jul 6 15:34:06 localhost usb.agent[2254]: Setup usblta for USB product 920/7500/400<br>
+  Jul 6 15:34:06 localhost usb.agent[2254]: Module setup usblta for USB product 920/7500/400<br>
+  <br>
+  And when the U10/U20 is unplugged from the USB port you should see messages in /var/log/messages similar to the following:<br>
+  <br>
+  Jul 6 15:37:48 localhost kernel: usb 1-2.4: USB disconnect, address 29<br>
+  Jul 6 15:37:48 localhost default.hotplug[2335]: arguments (usb) env (SUBSYSTEM=usb OLDPWD=/ DEVPATH=/devices/pci0000:00/0000:00:07.2/usb1/1-2/1-2.4/1-2.4:1.0 PATH=/bin:/sbin:/usr/sbin:/usr/bin ACTION=remove PWD=/etc/hotplug HOME=/ SHLVL=2 DEVICE=/proc/bus/usb/001/029 INTERFACE=255/255/255 PRODUCT=920/7500/400 TYPE=0/0/0 DEBUG=yes PHYSDEVBUS=usb SEQNUM=744 _=/bin/env)<br>
+  Jul 6 15:37:48 localhost default.hotplug[2335]: invoke /etc/hotplug/usb.agent ()<br>
+  Jul 6 15:37:48 localhost default.hotplug[2354]: arguments (usb) env (SUBSYSTEM=usb OLDPWD=/ DEVPATH=/devices/pci0000:00/0000:00:07.2/usb1/1-2/1-2.4 PATH=/bin:/sbin:/usr/sbin:/usr/bin ACTION=remove PWD=/etc/hotplug HOME=/ SHLVL=2 DEBUG=yes PHYSDEVBUS=usb SEQNUM=745 _=/bin/env)<br>
+  Jul 6 15:37:48 localhost default.hotplug[2354]: invoke /etc/hotplug/usb.agent ()<br>
+  </li>
+  <li>
+    <p style="margin-top: 0; margin-bottom: 0;">To determine the serial number of your USBLTA, run the command lsusblta specifying a -v argument, and look for the line starting with 'iSerial'.</p>
+    <p style="margin-top: 0; margin-bottom: 0;">&nbsp;&nbsp; # lsusblta -v<br>
+  The line starting with 'iSerial' will be approximately 14 lines down into the command results.&nbsp; The 8 hexadecimal value at the end of the 'iSerial' line is the serial number of the U10/U20, and it is is this serial number that you specify when opening up the interface with an OpenLDV enabled application.</p>
+  </li>
+  <li>The NodeUtil application can optionally be used to test the readiness of the U10/U20 network interface, or to perform network maintenance or diagnostic operations.&nbsp; <span style="font-family:times new roman;font-size:16px;"><span style="font-family:helvetica;"></span></span>To run NodeUtil, specify the 8-character serial number that you obtained from step 7 above  the -D option. If using a U20, also specify the -S option, for example:<br>
+    &nbsp;&nbsp; # NodeUtil -D009AEEBD -S
+    <p style="margin-top: 0; margin-bottom: 0;">Documentation for NodeUtil is provided in the file NODEUTIL.TXT  installed into the folder /usr/share/doc/DigitalHome-0.1. </p>
+  </li>
+  <li>
+    <p style="margin-top: 0; margin-bottom: 0;">You are now ready to run an OpenLDV compatible application.&nbsp; <span style="font-family:times new roman;font-size:16px;">For more information on how to program to the OpenLDV functions, download the OpenLDV Developer's Kit from <a href="http://www.echelon.com/downloads">http://www.echelon.com/downloads</a>.&nbsp; The DigitalHome-devel-0.1-8.i386.rpm includes the ported headers for writing an OpenLDV application. </span></p>
+  </li>
+</ol>
+<h1><span style="font-family:arial;font-size:21px;"><strong>4&nbsp; License</strong></span></h1>
+<blockquote>
+  <p><span style="font-family:times new roman;font-size:16px;">The license that governs the use of this network interface driver is agreed to before downloading this software from Echelon's Web site.&nbsp; The license is also available from the top level of the archive as License.htm.</span></p>
+</blockquote>
+<h1 style="margin-bottom: 0;"><span style="font-family:arial;font-size:21px;"><strong>5&nbsp; Technical Support</strong></span></h1>
+<blockquote style="margin-top: 0; margin-bottom: 0;">
+  <p style="font-family:times new roman; font-size:16px; margin-top: 0; margin-bottom: 0;">This network interface driver is not supported by Echelon.&nbsp; However, you may be able to get assistance from others on Echelon's WebBoard available at <a href="http://webserv.echelon.com">http://webserv.echelon.com</a>.&nbsp; If you have feedback, we'd still like to hear from you.&nbsp; See the Feedback section below.</p>
+</blockquote>
+<h1 style="margin-top: 0;"><span style="font-family:arial;font-size:21px;"><strong>6&nbsp; Feedback</strong></span></h1>
+<blockquote>
+  <p><span style="font-family:times new roman;font-size:16px;">Echelon welcomes your feedback on this network interface driver.&nbsp; Please send feedback to  interface@echelon.com.</span></p>
+</blockquote>
+</body>
+</html>

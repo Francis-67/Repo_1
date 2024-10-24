@@ -1,0 +1,15 @@
+# $Header: /home/garyb/FlashStick/CVSROOT/DigitalHome/Linux/usblta.usermap,v 1.1 2005/07/06 21:43:24 garyb Exp $
+#
+# (c) Copyright 2005, Gary Bartlett, Echelon Corporation.  All rights reserved.
+#
+# The entry below is used to detect a USB LonTalk Adapter when it's plugged in
+# and then run the usblta script to change the ownership and
+# permissions on the "device node" used by libusb.
+#
+# The 0x0003 match flag means the device is matched by its vendor and
+# product IDs.
+#
+# usb_module match_flags idVendor idProduct bcdDevice_lo bcdDevice_hi bDeviceClass bDeviceSubClass bDeviceProtocol bInterfaceClass bInterfaceSubClass bInterfaceProtocol driver_info
+#
+# Echelon LonTalk Adapter (0920/7500)
+usblta 0x0003 0x0920 0x7500 0x0000 0x0000 0x00 0x00 0x00 0x00 0x00 0x00 0x00000000

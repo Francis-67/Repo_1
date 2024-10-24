@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# $Header: /home/garyb/FlashStick/CVSROOT/DigitalHome/Linux/lsusblta,v 1.2 2005/07/06 21:43:23 garyb Exp $
+#
+# (c) Copyright 2005, Gary Bartlett, Echelon Corporation.  All rights reserved.
+#
+# Lists information about currently attached Echelon USB LonTalk Adapters.
+#
+# lsusblta [-v] [other lsusb options]
+
+lsusb -d 0x0920:0x7500 $*

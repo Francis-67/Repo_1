@@ -1,0 +1,10 @@
+/usr/lib/libUsbLta.so:
+	linux-gate.so.1 (0xf7f9a000)
+	libftdi.so.0 => /lib/libftdi.so.0 (0xf7f68000)
+	libstdc++.so.6 => /lib/i386-linux-gnu/libstdc++.so.6 (0xf7d8a000)
+	libm.so.6 => /lib/i386-linux-gnu/libm.so.6 (0xf7c85000)
+	libgcc_s.so.1 => /lib/i386-linux-gnu/libgcc_s.so.1 (0xf7c66000)
+	libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xf7a78000)
+	libusb-0.1.so.4 => /lib/libusb-0.1.so.4 (0xf7a70000)
+	/lib/ld-linux.so.2 (0xf7f9b000)
+of=/home/user/Lon_Linux/lib32:

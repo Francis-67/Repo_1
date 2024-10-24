@@ -1,0 +1,369 @@
+#!/bin/bash
+
+## ----------------------------------
+# Step #1: Define variables
+# ----------------------------------
+#EDITOR=gedit
+#PASSWD=/etc/passwd
+
+#This makes user enter sudo password to execute script
+
+
+# make decison
+if [ $EUID != 0 ]; then
+    sudo "$0" "$@"
+    exit $?
+fi
+
+
+# set text color  Example:  echo "$(tput setaf 1)M A I N - M E N U$(tput sgr 0)"
+black='tput setaf 0'
+red='tput setaf 1'
+green='tput setaf 2'
+yellow='tput setaf 3'
+blue='tput setaf 4'
+magenta='tput setaf 5'
+cyan='tput setaf 6'
+white='tput setaf 7'
+reset='tput sgr 0'
+bold='tput bold'
+underline='tput sgr 0 1'
+
+# Regular Colors   Example:  echo -e "${Red}M A I N - M E N U${NC}"
+Black='\033[0;30m'        # Black
+Red='\033[0;31m'          # Red
+Green='\033[0;32m'        # Green
+Yellow='\033[0;33m'       # Yellow
+Blue='\033[0;34m'         # Blue
+Purple='\033[0;35m'       # Purple
+Cyan='\033[0;36m'         # Cyan
+White='\033[0;37m'        # White
+NC='\033[0m'		  # No Color	
+
+
+ 
+# ----------------------------------
+# Step #2: User defined function
+# ----------------------------------
+pause(){
+  read -p "Complete, Press Enter key to continue..." fackEnterKey
+}
+
+
+
+###########################################################################################################################
+# do something in one()
+#Install Lon for Linux
+one(){
+
+pause1(){
+  	read -p "$(tput setaf 3)Press Enter to continue...$(tput sgr 0)" fackEnterKey
+}
+
+	echo "$(tput setaf 7)Starting Installation... Please connect to internet prior to install$(tput sgr 0)"
+	echo "$(tput setaf 7)Packages may need to be installed from repository.$(tput sgr 0)"
+	cd ~/Lon_Linux
+	#mate-terminal -e ./Lon_install
+
+pause1
+        
+echo -e "$(tput setaf 3)Installing .DEB Packages...............................$(tput sgr 0)"
+
+sleep 3
+
+cd ~/Lon_Linux/DEB
+
+dpkg -i *.deb
+
+# The below packages are to be installed from Lon_Linux Folder
+ #digitalhome_0.1-9_i386.deb
+ #digitalhome-devel_0.1-9_i386.deb
+ #libftdi_0.6-2_i386.deb 
+ #libftdi-debuginfo_0.6-2_i386.deb
+ #libftdi-devel_0.6-2_i386.deb
+ #libusb_0.1.10a-2_i386.deb
+ #libusb-debuginfo_0.1.10a-2_i386.deb
+ #libusb-devel_0.1.10a-2_i386.deb
+
+echo -e "$(tput setaf 6)Installing Dependencies.................................$(tput sgr 0)"
+
+sleep 5
+
+apt-get -y --force-yes --reinstall --allow-unauthenticated install $i synaptic libc6 libusb-0.1-4 libgcc1 libstdc++6 libftdi1 libgcc1 xterm
+
+
+echo -e "$(tput setaf 4)Creating Sym Links if needed.............................$(tput sgr 0)"
+
+sleep 3
+
+ln -s /usr/lib/libftdi.so /usr/lib/libftdi.so.0.6.0
+
+ln -s /usr/lib/libftdi.so.0 /usr/lib/libftdi.so.0.6.0
+
+#Creating lib32 directory if not already
+
+cd /usr
+
+mkdir --parents /usr/lib32
+
+cp /usr/lib/libftdi.* /usr/lib32
+
+cp /usr/lib/libUsbLta.so /usr/lib32
+
+
+#Copying files to directories
+
+cp ~/Lon_Linux/OpenLDVdefinitions.h /usr/include
+
+cp ~/Lon_Linux/OpenLDVdefinitions.h /usr/local/include
+
+cp ~/Lon_Linux/lsusblta /usr/bin
+
+cp ~/Lon_Linux/NodeUtil /usr/bin
+
+
+echo -e "$(tput setaf 5)End of Installation.................................$(tput sgr 0)"
+
+sleep 2
+
+echo "$(tput setaf 3)Package Installation Check.............................................$(tput sgr 0)"
+echo
+
+		dpkg --get-selections | grep libc6 
+		dpkg --get-selections | grep libusb-0.1-4
+		dpkg --get-selections | grep libgcc1
+		dpkg --get-selections | grep libstdc++6
+		dpkg --get-selections | grep libftdi1
+		dpkg --get-selections | grep libgcc1
+		dpkg --get-selections | grep xterm
+		#dpkg --get-selections | grep
+pause
+
+}
+########################################################################################################################### 
+# Dependencies check two()
+#Check Lib dependencies
+two(){
+
+mess(){
+  echo "$(tput setaf 7)Compare the 2 files and directories..."
+  echo "They should agree, if not then the dependencies have not been met..."	
+  echo "Close Library Check window when done...$(tput sgr 0)" 
+}
+
+cd ~/Lon_Linux
+
+#need to compare the 2 files from the ldd request to make sure dependencies are met.
+	echo "$(tput setaf 4)Check of Library Dependencies$(tput sgr 0)"
+	xterm -T "Depenencies" -geometry 57x20+100+450 -e "ldd /usr/lib/libUsbLta.so | sudo dd of=~/Lon_Linux/lib" &
+
+sleep 2 &&
+	 
+	#echo "$(tput setaf 3)Please wait.....$(tput sgr 0)" && 
+mess
+	xterm -hold -T "Library Check" -geometry 79x30-0+0 -e "diff -c lib Libcheck & sleep 8" 
+
+}
+########################################################################################################################### 
+# do something in three()
+#Dependencies lib 32
+three(){
+
+mess(){
+  echo "$(tput setaf 7)Compare the 2 files and directories..."
+  echo "They should agree, if not then the dependencies have not been met..."	
+  echo "Close Library Check 32 window when done...$(tput sgr 0)" 
+}
+
+cd ~/Lon_Linux
+
+	echo "Check of Library Lib32 Dependencies"
+        xterm -T "Depenencies" -geometry 57x20+100+450 -e "ldd /usr/lib/libUsbLta.so | sudo dd of=~/Lon_Linux/lib32" & 
+sleep 2 &&
+	#echo "$(tput setaf 4)Please wait..$(tput sgr 0)" && 
+mess
+	xterm -hold -T "Library Check 32" -geometry 79x30-0+0 -e "diff -c lib32 Libcheck32 & sleep 8"
+
+}
+###########################################################################################################################
+# do something in four()
+#Start Node utility
+four(){
+
+#Fetching serial number from USB device and display.
+
+cd ~/Lon_Linux
+#execute lsusblta and copy data to serial text.
+ 	lsusblta -v | sudo dd of=~/Lon_Linux/serial & 
+	echo
+	echo "$(tput setaf 4)Getting_Serial_Number of TP/FT-10 USB Adaptor...:)....$(tput sgr 0)" && 
+sleep 3
+
+getser(){
+#get serial function
+#reading serial text and extracting serial number of device.
+  	i=0; while read -r line; do test $((++i)) = 16 && echo "$line" > serial1; done < serial 
+sleep 1
+#saving serial # in serial 1 text then prints to screen saves in serial 2 as a variable
+	cat serial1 | awk '{print $3}' > serial2
+	#reads from serial2 and creates var= in serial3 text
+	i=0; while read -r line; do test $((++i)) = 1 && echo var="'$line'" > serial3; done < serial2
+	
+}
+
+	echo "$(tput setaf 4)Starting Node Utility 1.92$(tput sgr 0)"
+	cd ~/Lon_Linux
+	echo
+getser
+
+#Gets variable from file serial2 which is $var
+	source serial3
+	
+sleep 1
+
+	#cd /usr/bin
+	LON="NodeUtil"
+
+sleep 1
+			#$var is in the text file serial 3
+	mate-terminal --title LON 4 LINUX --geometry=108x36-0+0 -e "$LON -D$var"
+	
+}
+###########################################################################################################################
+# do something in five()
+#Get serial number of device
+five(){
+
+#Fetching serial number from USB device and display.
+
+cd ~/Lon_Linux
+#execute lsusblta and copy data to serial text.
+ 	lsusblta -v | sudo dd of=~/Lon_Linux/serial & 
+	echo
+	echo "$(tput setaf 4)Getting_Serial_Number of TP/FT-10 USB Adaptor.......$(tput sgr 0)" && 
+sleep 3
+
+getser(){
+#get serial function
+#reading serial text and extracting serial number of device.
+  	i=0; while read -r line; do test $((++i)) = 16 && echo "$line" > serial1; done < serial 
+sleep 1
+#saving serial # in serial 1 text then prints to screen saves in serial 2, serial3 as a variable
+	cat serial1 | awk '{print $3}' > serial2
+	i=0; while read -r line; do test $((++i)) = 1 && echo var="'$line'" > serial3; done < serial2
+	cat serial1 | awk '{print $3}'
+	
+}
+	
+	echo
+#execute get serial function
+getser
+	echo
+	
+pause
+
+
+}
+########################################################################################################################### 
+
+# do something in six()
+#Circle Diamond Test
+six(){
+
+#Fetching serial number from USB device and display.
+
+cd ~/Lon_Linux
+#execute lsusblta and copy data to serial text.
+ 	lsusblta -v | sudo dd of=~/Lon_Linux/serial & 
+	echo
+	echo "$(tput setaf 4)Getting_Serial_Number of TP/FT-10 USB Adaptor.......$(tput sgr 0)" && 
+sleep 3
+
+getser(){
+#get serial function
+#reading serial text and extracting serial number of device.
+  	i=0; while read -r line; do test $((++i)) = 16 && echo "$line" > serial1; done < serial 
+sleep 1
+#saving serial # in serial 1 text then prints to screen saves in serial 2, serial3 as a variable
+	cat serial1 | awk '{print $3}' > serial2
+	i=0; while read -r line; do test $((++i)) = 1 && echo var="'$line'" > serial3; done < serial2
+	#cat serial1 | awk '{print $3}'
+	
+}
+
+	echo "$(tput setaf 4)Starting Circle Diamond Test$(tput sgr 0)"
+	cd ~/Lon_Linux
+	echo
+getser
+	
+#Gets variable from file serial2 which is $var
+	source serial3
+	
+sleep 2
+
+	#cd /usr/bin
+	LON="./lon_reset"
+	 
+
+sleep 1
+			#$var is in the text file serial 3
+	mate-terminal --title LON 4 LINUX --geometry=120x36-0+0 -e "$LON $var"
+	
+}
+###########################################################################################################################
+# function to display menus
+show_menus() {
+
+#Info="uname -o -r -s"
+
+	clear
+	echo "          ~~~~~~~~~~~~~~~~~~~~~"	
+	echo "            $(tput setaf 1)$(tput bold)M A I N - M E N U$(tput sgr 0)"
+	echo "              $(tput setaf 7)$(tput bold)F.F. $(tput setaf 3)Ver 13.2$(tput sgr 0)"
+	echo "          ~~~~~~~~~~~~~~~~~~~~~" 
+	echo "1. Install LON Echelon for Linux."
+	echo "2. Check Lib Dependencies."
+	echo "3. Check Lib32 Dependencies."
+	echo "4. Start Node Utility."
+	echo "5. Get USB TP/FT-10 Serial."
+	echo "6. Start Circle Diamond Test."
+	echo "7. $(tput bold)$(tput setaf 3)Exit$(tput sgr 0)"
+	echo
+	echo "You are Running:" & uname -o -r -s
+	echo
+
+
+}
+# read input from the keyboard and take a action
+# invoke the one() when the user select 1 from the menu option.
+# invoke the two() when the user select 2 from the menu option.
+# Exit when user the user select 7 from the menu option.
+read_options(){
+	local choice
+	read -p "Enter choice [ 1 - 7] " choice
+	case $choice in
+		1) one ;;
+		2) two ;;
+		3) three ;;
+		4) four ;;
+		5) five ;;
+		6) six ;;
+		7) exit 0;;
+		*) echo -e "${RED}Error...${STD}" && sleep 2
+	esac
+}
+ 
+# ----------------------------------------------
+# Step #3: Trap CTRL+C, CTRL+Z and quit singles
+# ----------------------------------------------
+trap '' SIGINT SIGQUIT SIGTSTP
+ 
+# -----------------------------------
+# Step #4: Main logic - infinite loop
+# ------------------------------------
+while true
+do
+ 
+	show_menus
+	read_options
+done

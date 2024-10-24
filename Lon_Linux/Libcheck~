@@ -1,0 +1,8 @@
+	linux-gate.so.1 =>  (0xb77cd000)
+	libftdi.so.0 => /usr/lib/libftdi.so.0 (0xb77a1000)
+	libstdc++.so.6 => /usr/lib/i386-linux-gnu/libstdc++.so.6 (0xb76b9000)
+	libm.so.6 => /lib/i386-linux-gnu/libm.so.6 (0xb7672000)
+	libgcc_s.so.1 => /lib/i386-linux-gnu/libgcc_s.so.1 (0xb7655000)
+	libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xb74a7000)
+	libusb-0.1.so.4 => /lib/i386-linux-gnu/libusb-0.1.so.4 (0xb749d000)
+	/lib/ld-linux.so.2 (0xb77d0000)

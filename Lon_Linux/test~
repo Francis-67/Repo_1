@@ -1,0 +1,45 @@
+#!/bin/bash
+
+
+black='tput setaf 0'
+red='tput setaf 1'
+green='tput setaf 2'
+yellow='tput setaf 3'
+blue='tput setaf 4'
+magenta='tput setaf 5'
+cyan='tput setaf 6'
+white='tput setaf 7'
+reset='tput sgr 0'
+bold='tput bold'
+underline='tput sgr 0 1'
+
+#pause(){
+  #read -p "Press [Enter] key to continue..." fackEnterKey
+#}
+
+#echo "Check of Library Dependencies"
+#cd ~/Lon_Linux
+
+
+#xterm -e "lsusb -v -d 0x0920:0x7500 $* | sudo dd of=~/output && 
+#echo "$(tput setaf 4)$(tput bold)Getting_Serial_#" && 
+#sleep 3"
+
+cd ~/
+
+i=0; while read line; do test $((++i)) = 16 && echo "$line$(tput setaf 4)"; done < output
+	 
+	
+		
+	
+
+	#exit 0
+
+
+
+
+#mate-terminal -e NodeUtil
+
+
+#read -p "Press any key to exit > " -n1 junk
+#echo

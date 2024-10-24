@@ -1,0 +1,88 @@
+#!/bin/bash 
+
+# set text color  Example:  echo "$(tput setaf 1)M A I N - M E N U$(tput sgr 0)"
+black='tput setaf 0'
+red='tput setaf 1'
+green='tput setaf 2'
+yellow='tput setaf 3'
+blue='tput setaf 4'
+magenta='tput setaf 5'
+cyan='tput setaf 6'
+white='tput setaf 7'
+reset='tput sgr 0'
+bold='tput bold'
+underline='tput sgr 0 1'
+
+# Regular Colors   Example:  echo -e "${Red}M A I N - M E N U${NC}"
+Black='\033[0;30m'        # Black
+Red='\033[0;31m'          # Red
+Green='\033[0;32m'        # Green
+Yellow='\033[0;33m'       # Yellow
+Blue='\033[0;34m'         # Blue
+Purple='\033[0;35m'       # Purple
+Cyan='\033[0;36m'         # Cyan
+White='\033[0;37m'        # White
+NC='\033[0m'		  # No Color
+
+#THIS FILE MUST BE RAN AS ROOT 
+
+echo -e "$(tput setaf 3)Installing .DEB Packages..............................."
+
+sleep 3
+
+cd ~/Lon_Linux/DEB
+
+dpkg -i *.deb
+
+# The below packages are to be installed from Lon_Linux Folder
+ #digitalhome_0.1-9_i386.deb
+ #digitalhome-devel_0.1-9_i386.deb
+ #libftdi_0.6-2_i386.deb 
+ #libftdi-debuginfo_0.6-2_i386.deb
+ #libftdi-devel_0.6-2_i386.deb
+ #libusb_0.1.10a-2_i386.deb
+ #libusb-debuginfo_0.1.10a-2_i386.deb
+ #libusb-devel_0.1.10a-2_i386.deb
+
+echo -e "$(tput setaf 6)Installing Dependencies................................."
+
+sleep 5
+
+apt-get -y --force-yes --reinstall --allow-unauthenticated install $i libc6 libusb-0.1-4 libgcc1 libstdc++6 libftdi1 libgcc1 xterm
+
+
+echo -e "$(tput setaf 4)Creating Sym Links if needed.............................${NC}"
+
+sleep 3
+
+ln -s /usr/lib/libftdi.so /usr/lib/libftdi.so.0.6.0
+
+ln -s /usr/lib/libftdi.so.0 /usr/lib/libftdi.so.0.6.0
+
+#Creating lib32 directory if not already
+
+cd /usr
+
+mkdir --parents /usr/lib32
+
+cp /usr/lib/libftdi.* /usr/lib32
+
+cp /usr/lib/libUsbLta.so /usr/lib32
+
+
+#Copying files to directories
+
+cp ~/Lon_Linux/OpenLDVdefinitions.h /usr/include
+
+cp ~/Lon_Linux/OpenLDVdefinitions.h /usr/local/include
+
+cp ~/Lon_Linux/lsusblta /usr/bin
+
+
+echo -e "$(tput setaf 5)End of Installation.................................${NC}"
+
+sleep 4
+
+exit
+
+

@@ -1,0 +1,127 @@
+#!/bin/sh
+# vim: syntax=sh
+#
+# $Header: /home/garyb/FlashStick/CVSROOT/DigitalHome/Linux/usblta.rc,v 1.1 2005/07/06 21:43:23 garyb Exp $
+#
+# (c) Copyright 2005, Gary Bartlett, Echelon Corporation.  All rights reserved.
+#
+# /etc/hotplug/usblta.rc	This brings the USB LonTalk Adapters up and down safely.
+#
+# Originally based on:
+# 	Id: usb.rc,v 1.28 2004/09/20 22:30:35 kroah Exp
+#
+# Best invoked via /etc/init.d/hotplug or equivalent, with
+# writable /tmp, /usr mounted, and syslogging active.
+#
+# Bus management is basically unrelated to runlevel changes; it
+# relates to physical topology, including possibly hotpluggable
+# busses (USB, Cardbus) or controllers.  If a bus is physically
+# present, it should normally be available.
+
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+unset I_WANT_A_BROKEN_PS
+PS_PERSONALITY=linux
+
+USBLTA_VID=0920
+USBLTA_PID=7500
+USBLTA_DID=0400
+
+# override any of the defaults above?
+if [ -f /etc/sysconfig/usblta ]; then
+    . /etc/sysconfig/usblta
+fi
+if [ -f /etc/conf.d/usblta ]; then
+    . /etc/conf.d/usblta
+fi
+
+
+#
+# "COLD PLUG" ... recovery from partial USB init that may have happened
+# before the OS could really handle hotplug, perhaps because /sbin or
+# $HOTPLUG_DIR wasn't available or /tmp wasn't writable.  When/if the
+# /sbin/hotplug program is invoked then, hotplug event notifications
+# get dropped.  To make up for such "cold boot" errors, we synthesize
+# all the hotplug events we expect to have seen already.  They can be
+# out of order, and some might be duplicates.
+#
+# Note that on 2.5 the init filesystem may have loaded some of the more
+# essential usb drivers (maybe usb-storage for a boot disk, and hid),
+# but we may still need to load less important ones or invoke setup
+# scripts that couldn't run earlier.
+#
+usb_boot_events ()
+{
+	#
+	# FIXME on 2.5, /sys/bus/usb/devices/* gives all of the
+	# info we need.  Interface hotplug events come from the
+	# "*:*" files, and device events (do them first) come
+	# from the others. 
+	#
+	# don't expect usbmodules to exist!!  and remove the
+	# dependency (below) on usbfs to decide whether we should
+	# be synthesizing coldplug events.
+	#
+
+	# synthesize hotplug events if we can 
+
+	# make sure the usb agent will run
+	ACTION=add
+	PRODUCT=0/0/0
+	TYPE=
+	INTERFACE=
+	DEVPATH=
+	DEVFS=/proc/bus/usb
+	DEVICE=
+	export ACTION PRODUCT TYPE INTERFACE DEVPATH DEVFS DEVICE
+
+	if [ -d /sys/bus ]; then
+	    if [ -d /sys/bus/usb/devices ]; then
+		cd /sys/bus/usb/devices
+		for device in /sys/bus/usb/devices/[0-9]*; do
+		    devlink=$(readlink -f $device)
+		    DEVPATH=${devlink#/sys}
+		    if [ -f $devlink/../idVendor ]; then
+			VID=$(< $devlink/../idVendor)
+			PID=$(< $devlink/../idProduct)
+			DID=$(< $devlink/../bcdDevice)
+			#if [ "$VID/$PID/$DID" = "$USBLTA_VID/$USBLTA_PID/$USBLTA_DID" ]; then
+			if [ "$VID/$PID" = "$USBLTA_VID/$USBLTA_PID" ]; then
+			    PRODUCT="$VID/$PID/$DID"
+		            if [ -f $devlink/../../devnum ]; then
+				devbus=$( ( echo -n 000`echo $devlink | sed 's/^.*usb\([0-9]\+\)\/.*$/\1/'` ) | grep -o ...\$ )
+				devdev=$( ( echo -n 000; cat $devlink/../devnum )                             | grep -o ...\$ )
+				DEVICE="/proc/bus/usb/$devbus/$devdev"
+			    else
+				DEVICE=
+			    fi
+
+			    SER=$(< $devlink/../serial)
+			    echo "Cold plugging USBLTA (Serial# $SER)"
+			    /etc/hotplug/usb.agent
+			fi
+		    fi	
+		done
+	    fi
+	fi
+}
+
+
+# See how we were called.
+case "$1" in
+  start)
+	usb_boot_events
+        ;;
+  stop)
+        ;;
+  status)
+	;;
+  restart)
+	# always invoke by absolute path, else PATH=$PATH:
+	$0 stop && $0 start
+	;;
+  *)
+        echo $"Usage: $0 {start|stop|status|restart}"
+        exit 1
+esac
