@@ -1,3 +1,6 @@
+Francis Fiorillo originator, software development
+Contribution C code    Alan Koski software development
+
 This was a sucessful attempt to get the Echelon USB U10 to be able to communicate in a Linux enviorment. 
 Here you will find a very rough installation of the required libs and configs to get the adapter to communicate with the Linux OS. Using a version of Linux called MATE 16 this process was launched.
 Once the USB has been recognized Node Utility can be launced and through this you can communicate.
